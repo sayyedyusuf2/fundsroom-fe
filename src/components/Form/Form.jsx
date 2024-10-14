@@ -1,12 +1,15 @@
 import React from "react"
 import useForm from "./useForm"
 import axios from "axios"
+import { useNavigate } from 'react-router-dom'
 
-function Form({ user }) {
+function Form({ user, token, setLoggedIn, loggedIn }) {
     const { handleChange, inputs } = useForm()
 
     const [isMount, setIsMount] = React.useState(false)
     const [hash, setHash] = React.useState("")
+
+    const navigate = useNavigate()
 
     React.useEffect(() => {
         setIsMount(true)
@@ -21,10 +24,25 @@ function Form({ user }) {
                     productinfo: inputs.productInfo,
                     firstname: user.name,
                     email: user.email
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 })
                 .then((resp) => setHash(resp.data.data))
-                .catch((error) => console.log(error.message))
+                .catch((error) => {
+                    if (error.response.data.statusCode === 401) {
+                        setLoggedIn(false)
+                        localStorage.removeItem('user')
+                        localStorage.removeItem('authToken')
+                        navigate('/login')
+                    }
+                })
     }, [isMount, inputs])
+
+    if (!loggedIn) {
+        return navigate('/login')
+    }
 
     return (
     <section className="pt-5" style={{ backgroundColor: '#ABDCFF', height: "100vh",backgroundImage:'linear-gradient(135deg, #ABDCFF 0%, #0396FF 100%)' }}>
