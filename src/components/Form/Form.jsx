@@ -76,13 +76,13 @@ function Form({ user, token, setLoggedIn, loggedIn }) {
                         <input
                             id="surl"
                             name="surl"
-                            value='http://localhost:5173/success'
+                            value='http://98.83.27.32/success'
                             hidden
                         />
                         <input
                             id="furl"
                             name="furl"
-                            value='http://localhost:5173/failure'
+                            value='http://98.83.27.32/failure'
                             hidden
                         />
                         <input
